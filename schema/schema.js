@@ -20,9 +20,15 @@ const CompanyType = new GraphQLObjectType({
     users: {
       type: new GraphQLList(UserType),
       resolve(parentValue, args) {
-        return axios
-          .get(`http://localhost:3000/companies/${parentValue.id}/users`)
-          .then(res => res.data);
+           return User.find().then( res => {
+          return res.filter(v=>v.companyId==parentValue.id)
+          
+         });
+
+
+        // return axios
+        //   .get(`http://localhost:3000/companies/${parentValue.id}/users`)
+        //   .then(res => res.data);
       }
     }
   })
@@ -34,34 +40,25 @@ const UserType = new GraphQLObjectType({
     id: { type: GraphQLString },
     firstName: { type: GraphQLString },
     age: { type: GraphQLInt },
+    companyId:{ type : GraphQLString },
     company: {
       type: CompanyType,
       resolve(parentValue, args) {
-        return axios
-          .get(`http://localhost:3000/companies/${parentValue.companyId}/`)
-          .then(res => res.data);
+        return Company.findById(parentValue.companyId, res => {
+          return { res };
+        });
+
+
+        // return axios
+        //   .get(`http://localhost:3000/companies/${parentValue.companyId}/`)
+        //   .then(res => res.data);
       }
     }
   })
 });
 
 
-const UsersType = new GraphQLObjectType({
-  name: 'Users',
-  fields: () => ({
-    id: { type: GraphQLString },
-    firstName: { type: GraphQLString },
-    age: { type: GraphQLInt },
-    company: {
-      type: CompanyType,
-      resolve(parentValue, args) {
-        return axios
-          .get(`http://localhost:3000/companies/${parentValue.companyId}/`)
-          .then(res => res.data);
-      }
-    }
-  })
-});
+
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -196,3 +193,12 @@ module.exports = new GraphQLSchema({
   query: RootQuery,
   mutation: mutation
 });
+
+
+/*
+ resolve(parentValue, args) {
+        return axios
+          .get(`http://localhost:3000/companies/${parentValue.companyId}/`)
+          .then(res => res.data);
+      }
+*/ 

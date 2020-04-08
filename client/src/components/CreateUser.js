@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 
 function CreateUser(props) {
-  console.log(
-    props
-  )
-  const { history } = props;
-
-  const { data } = props;
+  const { data, history } = props;
   const [firstName, setFirstName] = useState("")
   const [age, setAge] = useState("")
   const [company, setCompany] = useState("")
@@ -75,6 +70,9 @@ const queryUsers = gql`
       firstName
       age
       id
+      company{
+        name
+      }
     }
   }
 `;
@@ -83,7 +81,7 @@ const mutation = gql`
 mutation AddUser($firstName:String!,$age:Int!,$companyId:String) {
     addUser(firstName:$firstName,age:$age,companyId:$companyId){
       firstName
-      
+      id
     
     }
   }

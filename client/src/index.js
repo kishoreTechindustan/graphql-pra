@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ApolloClient from 'apollo-client';
-import {ApolloProvider} from 'react-apollo';
-import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { ApolloProvider } from 'react-apollo';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -18,11 +18,12 @@ const link = new HttpLink({
 const client = new ApolloClient({
   link,
   cache: new InMemoryCache(),
+  dataIdFromObject: o => o.id
 });
 ReactDOM.render(
   <React.StrictMode>
-<ApolloProvider client={client}>
-    <App />
+    <ApolloProvider client={client}>
+      <App />
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')
